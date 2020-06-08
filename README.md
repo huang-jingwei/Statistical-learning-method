@@ -8,11 +8,13 @@
 
 
 
+
 第2章：感知机模型
 
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106574664
 
 知乎文章链接：https://zhuanlan.zhihu.com/p/146427445
+
 
 
 第3章：knn模型
