@@ -6,10 +6,7 @@
 2、在复现代码中，总结了一些常见错误以及解决方法。
 
 
-
-
-
-第2章：感知机模型
+## 第2章：感知机模型
 
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106574664
 
@@ -17,11 +14,12 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106574664
 
 
 
-第3章：knn模型
+## 第3章：knn模型
 
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106593228
 
 知乎文章链接：https://zhuanlan.zhihu.com/p/146668648
+
 
 
 未完待续~
