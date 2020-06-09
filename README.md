@@ -23,5 +23,6 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106593228
 
 # 第4章：朴素贝叶斯
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106627482
+知乎文章链接：https://zhuanlan.zhihu.com/p/146920788
 
 未完待续~
