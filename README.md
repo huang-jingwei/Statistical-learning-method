@@ -16,7 +16,7 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106574664
 
 知乎文章链接：https://zhuanlan.zhihu.com/p/146427445
 
-# 第3章：knn
+# 第3章：KNN
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106593228
 
 知乎文章链接：https://zhuanlan.zhihu.com/p/146668648
