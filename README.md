@@ -27,7 +27,7 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106647464
 
 # 第7章：支持向量机
 
-# 第8章：adaboost
+# 第8章：AdaBoost
 
 
 
