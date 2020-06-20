@@ -25,9 +25,11 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106647464
 
 知乎文章链接：https://zhuanlan.zhihu.com/p/147645079
 
-# 第7章：支持向量机
+# 第16章：主成分分析
 
-# 第8章：AdaBoost
+
+
+
 
 
 
