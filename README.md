@@ -28,7 +28,7 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106647464
 # 第14章：聚类方法
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106881259
 
-知乎文章链接：https://zhuanlan.zhihu.com/p/147645079
+知乎文章链接：https://zhuanlan.zhihu.com/p/149824865
 
 # 第16章：主成分分析
 
