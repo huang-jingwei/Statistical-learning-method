@@ -1,5 +1,5 @@
 # 统计学习方法
-结合Python 3和mnist数据集，复现《统计学习方法》第二版的经典机器学习算法。
+Recurrence the algorithm of the second edition of "Statistical Learning Method"
 
 算法总结（.md文件）在Doc文件夹
 
