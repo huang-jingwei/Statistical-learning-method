@@ -117,7 +117,6 @@ s.t.&\sum_{n=1}^m {\alpha_{i}y_{i}}=0\\
 求得对偶问题的最优解$\alpha^{*}=(\alpha_{1}^{*},\alpha_{2}^{*},...,\alpha_{m}^{*})$后，便可得原问题的最优解
 $$\begin{aligned}
 &\vec w^{*} =\sum_{n=1}^m {\alpha_{i}^{*}y_{i}\vec x_{i}}\\
-&b^{*}=\frac{1}{m}\sum_{n=1}^m {(y_{i}-\vec w^{*} \cdot\vec x_{i})}
 \end{aligned}$$
 
 
