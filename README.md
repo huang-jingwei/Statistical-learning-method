@@ -28,7 +28,7 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106647464
 # 第7章：支持向量机
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106903162
 
-知乎文章链接：https://zhuanlan.zhihu.com/p/147645079
+知乎文章链接：https://zhuanlan.zhihu.com/p/150583574
 
 # 第14章：聚类方法
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106881259
