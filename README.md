@@ -31,7 +31,7 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106903162
 知乎文章链接：https://zhuanlan.zhihu.com/p/150583574
 
 # 第8章：提升方法
-
+CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106730195
 
 
 # 第14章：聚类方法
