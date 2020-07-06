@@ -41,6 +41,11 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106881259
 
 知乎文章链接：https://zhuanlan.zhihu.com/p/149824865
 
+# 第15、16章：奇异值分解、主成分分析
+
+
+
+
 
 
 
