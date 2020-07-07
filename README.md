@@ -48,7 +48,7 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106881259
 
 
 
-
+注：若.md文件打开显示乱码，在Typora软件的偏好设置里勾上内联公式和优先图片相对路径。
 
 
 
