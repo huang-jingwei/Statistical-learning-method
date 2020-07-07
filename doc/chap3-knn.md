@@ -44,7 +44,7 @@ $$L_{2}\left(x_{i}, x_{j}\right)=\left(\sum_{l=1}^{n}\left|x_{i}^{(l)}-x_{j}^{(l
 $$L_{1}\left(x_{i}, x_{j}\right)=\sum_{l=1}^{n}\left|x_{i}^{(l)}-x_{j}^{(l)}\right|$$
 3、当$p=\infty$时，它是各个坐标距离的最大值，即
 $$L_{\infty}\left(x_{i}, x_{j}\right)=\max _{l}\left|x_{i}^{(l)}-x_{j}^{(l)}\right|$$
-![在这里插入图片描述](C:\Users\hellp\Desktop\统计学习方法\image\Lp距离间的关系.png)
+![在这里插入图片描述](../image/Lp距离间的关系.png)
 
 
 

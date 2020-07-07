@@ -1,4 +1,4 @@
-﻿github链接：[https://github.com/gdutthu/Statistical-learning-method](https://github.com/gdutthu/Statistical-learning-method)
+github链接：[https://github.com/gdutthu/Statistical-learning-method](https://github.com/gdutthu/Statistical-learning-method)
 知乎专栏链接：[https://zhuanlan.zhihu.com/c_1252919075576856576](https://zhuanlan.zhihu.com/c_1252919075576856576)
 
 **算法总结：**
@@ -20,7 +20,7 @@ https://blog.csdn.net/guoyunfei20/article/details/78911721
 ## 1.1 正向概率
 **正向概率通俗地讲指的是我们往往是上帝视角，即了解了事情的全貌再做判断。**
 试着思考这个问题，已知袋子里面有 N 个球，其中 M 个黑球，剩下的均为白球。那么把手伸进去摸一个球，问摸出黑球的概率是多少。因为我们此时已经对系统有了全局的认识，这个时候计算起来就非常地简单。
-![在这里插入图片描述](C:\Users\hellp\Desktop\统计学习方法\image\白球黑球问题.png)
+![在这里插入图片描述](../image/白球黑球问题.png)
 如：一个袋子里有10个球，其中6个黑球，4个白球；那么随机抓一个黑球的概率是0.6！
 
 ## 1.2 逆向概率
@@ -69,7 +69,7 @@ P\left(X=x | Y=c_{k}\right) &=P\left(X^{(1)}=x^{(1)}, \cdots, X^{(n)}=x^{(n)} | 
 \end{aligned}$$
 此时我们只需要单独计算每个特征维度的类条件概率，就可以得到该特征总的类条件概率。
 注：常见的贝叶斯模型的从属关系
-![在这里插入图片描述](C:\Users\hellp\Desktop\统计学习方法\image\贝叶斯模型.png)
+![在这里插入图片描述](../image/贝叶斯模型.png)
 
 
 
@@ -77,7 +77,7 @@ P\left(X=x | Y=c_{k}\right) &=P\left(X^{(1)}=x^{(1)}, \cdots, X^{(n)}=x^{(n)} | 
 
 # 3 算法流程
 那么结合上面所讲的内容，可以看出朴素贝叶斯算法可以分为三大阶段，四个步骤（算法步骤在第三小节中给出）。具体如下
-![在这里插入图片描述](C:\Users\hellp\Desktop\统计学习方法\image\朴素贝叶斯的计算流程.png)
+![在这里插入图片描述](../image/朴素贝叶斯的计算流程.png)
 **输入：**
 训练数据$T=\left\{\left(x_{1}, y_{1}\right),\left(x_{2}, y_{2}\right), \cdots,\left(x_{N}, y_{N}\right)\right\}$，其中$x_{i}=\left(x_{i}^{(1)}, x_{i}^{(2)}, \cdots\right.$$\left.x_{i}^{(n)}\right)^{\mathrm{T}}$，$x_{i}^{(j)}$是第$i$个样本的第$j$个特征，$x_{i}^{(j)} \in\left\{a_{j 1}, a_{j 2}, \cdots, a_{j S_{j}}\right\}$，$a_{j l}$是第$j$个特征可能取到的第$l$个值，$j=1,2, \cdots, n, l=1,2, \cdots, S_{j}, y_{i} \in\left\{c_{1}, c_{2}, \cdots, c_{K}\right\}$；实例$x$;
 **输出：**
