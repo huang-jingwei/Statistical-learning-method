@@ -5,7 +5,9 @@ github链接：[https://github.com/gdutthu/Statistical-learning-method](https://
 
 
 
+**补充知识**
 
+1、目标函数为什么要采用$\log$函数；
 
 # 1 EM模型
 
@@ -90,7 +92,7 @@ $$
 
 ## 1.2 算法流程
 
-最大期望算法经过两个步骤交替进行计算：
+从上面的例子可看出，最大期望算法经过两个步骤交替进行计算：
 
 **step1:** 计算期望（E），利用对隐藏变量的现有估计值，计算其最大似然估计值；
 
@@ -119,6 +121,19 @@ L(\theta) &=\log P(Y \mid \theta)=\log \sum_{Z} P(Y, Z \mid \theta) \\
 $$
 对上面表达式进行极大化时，我们遇到的主要困难是上面式子中包含隐变量（也称为，未观测数据）的和（或者，积分）的对数。因为无法事先知道隐变量的取值，所以我们很难对其进行优化。
 
+
+
+**补充知识**
+
+Q：目标函数为什么要采用$\log$函数；
+
+A：
+
+1. 因为概率数值是0~1之间的数值，概率数值之间的乘法会出现概率越乘越小。采用$\log$函数防止在连续乘法的时候， 因为数值太小造成溢出导致程序失效。
+2. $\log$函数是单调递增函数。目标函数（对数似然函数）的最大化，也对应着事件概率数值的最大化。
+
+
+
 ## 2.1 学习策略
 
 
@@ -135,7 +150,34 @@ $$
 
 # 3 GMM模型
 
-## 3.1 提出模型
+## 3.1 单高斯分布的极大似然估计
+
+假设数据是由单个高斯分布产生的 $x \sim \mathcal{N}(\mu, \Sigma)$，我们有观测值$x_{i} \in \mathcal{D}$，需要根据这些观测值估计出高斯分布的参数$\mu$ 和 $\Sigma$，由于单个高斯很简单，只需要最大化似然概率即可
+$$
+\begin{equation}\begin{aligned}
+\log p(X) &=\sum_{i=1}^{N} \log \mathcal{N}\left(x_{i} \mid \mu, \Sigma\right) \\
+&=\sum_{i=1}^{N} \log \frac{1}{\sqrt{2 \pi} \sigma} e^{-\frac{\left(z_{i}-\mu\right)^{2}}{2 \sigma^{2}}} \\
+&=\sum_{i=1}^{N} \log \frac{1}{\sqrt{2 \pi} \sigma}+\sum_{i=1}^{N}-\frac{\left(x_{i}-\mu\right)^{2}}{2 \sigma^{2}} \\
+&=-\frac{N}{2} \log 2 \pi-\frac{N}{2} \log \sigma^{2}-\frac{1}{2 \sigma^{2}} \sum_{i=1}^{N}\left(x_{i}-\mu\right)^{2}
+\end{aligned}\end{equation}
+$$
+对对数似然概率求偏导，可得最优的高斯分布参数$\mu$ 和 $\Sigma$
+$$
+\begin{equation}\begin{aligned}
+\frac{\partial \log p(X)}{\partial \mu} &=\frac{1}{\sigma^{2}} \sum_{i=1}^{N}\left(x_{i}-\mu\right)=0 \\
+& \Rightarrow \mu_{MLE}=\frac{1}{N} \sum_{i=1}^{N} x_{i}
+\end{aligned}\end{equation}
+$$
+
+$$
+\begin{equation}\begin{aligned}
+\frac{\partial \log p(X)}{\partial \sigma^{2}} &=-\frac{N}{2 \sigma^{2}}+\frac{1}{2 \sigma^{4}} \sum_{i=1}^{N}\left(x_{i}-\mu\right)^{2}=0 \\
+& \Rightarrow \sigma^{2}_{MLE}=\frac{1}{N} \sum_{i=1}^{N}\left(x_{i}-\mu\right)^{2}
+\end{aligned}\end{equation}
+$$
+
+
+## 3.2 提出模型
 
 在机器学习中，我们常常假设数据服从高斯分布。但是高斯模型是关于均值对称的。从下面数据图可看出，若我们假设采用单个高斯模型来进行建模，这显然是不符合所采集到的数据特征。
 
@@ -150,7 +192,7 @@ $$
 ![](../image/二唯混合高斯分布界面轮廓线.png)
 
 
-## 3.2 算法流程
+## 3.3 算法流程
 
 
 
