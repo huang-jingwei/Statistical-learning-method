@@ -152,7 +152,7 @@ A：
 
 ## 3.1 单高斯分布的极大似然估计
 
-假设数据是由单个高斯分布产生的 $x \sim \mathcal{N}(\mu, \Sigma)$，我们有观测值$x_{i} \in \mathcal{D}$，需要根据这些观测值估计出高斯分布的参数$\mu$ 和 $\Sigma$，由于单个高斯很简单，只需要最大化似然概率即可
+假设数据是由单个高斯分布产生的 $x \sim \mathcal{N}(\mu, \Sigma)$，我们有观测值$x_{i} \in \mathcal{D}$，需要根据这些观测值估计出高斯分布的参数$\theta=\{\mu,\Sigma\} $ ,由于单个高斯很简单，只需要最大化似然概率即可
 $$
 \begin{equation}\begin{aligned}
 \log p(X) &=\sum_{i=1}^{N} \log \mathcal{N}\left(x_{i} \mid \mu, \Sigma\right) \\
@@ -161,7 +161,7 @@ $$
 &=-\frac{N}{2} \log 2 \pi-\frac{N}{2} \log \sigma^{2}-\frac{1}{2 \sigma^{2}} \sum_{i=1}^{N}\left(x_{i}-\mu\right)^{2}
 \end{aligned}\end{equation}
 $$
-对对数似然概率求偏导，可得最优的高斯分布参数$\mu$ 和 $\Sigma$
+对上述对数似然概率求偏导，可得最优的高斯分布参数$\theta=\{\mu,\Sigma\}$
 $$
 \begin{equation}\begin{aligned}
 \frac{\partial \log p(X)}{\partial \mu} &=\frac{1}{\sigma^{2}} \sum_{i=1}^{N}\left(x_{i}-\mu\right)=0 \\
@@ -175,6 +175,7 @@ $$
 & \Rightarrow \sigma^{2}_{MLE}=\frac{1}{N} \sum_{i=1}^{N}\left(x_{i}-\mu\right)^{2}
 \end{aligned}\end{equation}
 $$
+
 
 
 ## 3.2 提出模型
@@ -211,6 +212,6 @@ $$
 
 
 ```python
-def
+代码明天再补
 ```
 
