@@ -1,9 +1,11 @@
 # 统计学习方法
-Recurrence the algorithm of the second edition of "Statistical Learning Method"
+Python语言复现李航《统计学习方法》第二版的算法，也记录了复现过程的一些个人心得。
 
 算法总结（.md文件）在Doc文件夹
 
 知乎专栏链接：https://zhuanlan.zhihu.com/c_1252919075576856576
+
+CSDN专栏链接：https://blog.csdn.net/zhanzi1538/category_10078175.html
 
 # 第2章：感知机
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106574664
