@@ -77,8 +77,8 @@ def calcBestFeature(trainData, trainLabel):
 def getSubDataArr(trainData, trainLabel,featureIndex, a):
     newLabel=trainLabel[np.where(trainData[:,featureIndex]==a)]  #提取出data[：,A]== a的训练数据和标签数据
     newData=trainData[np.where(trainData[:,featureIndex]==a)]
-    del newData[:,featureIndex]          #删除featureIndex对应的特征维度
-    return newData, newLabel             #返回新的数据集和标签集
+    del newData[:,featureIndex]                                  #删除featureIndex对应的特征维度
+    return newData, newLabel                                     #返回更新后的数据集和标签集
 
 
 
