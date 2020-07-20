@@ -37,7 +37,7 @@ def calculation_H_D(label):
     HD=0                                               #初始化数据集的经验熵
     for labelValue in labelClass:                      #遍历label所有可能的取值
         subLabelSet=label[np.where(label==labelValue)] #提取出标签数据集中label==labelValue的数据，构成子数据集
-        prob=len(subLabelSet)/len(label)
+        prob=len(subLabelSet)/len(label)               #该子集所占比例
         HD +=(-1)*prob*np.log(prob)
     return HD
 
@@ -45,12 +45,13 @@ def calculation_H_D(label):
 #参考公式：李航《统计学习方法》第二版 公式5.8
 #参数说明：trainDataFeature:训练数据集被提取出的的一列特征数据，label：训练数据集的标签数据集
 def calculation_H_D_A(trainDataFeature,label):
-    dataValueClass = np.unique(trainDataFeature)                 #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
-    HDA=0                                                        #初始化当前特征维度的经验条件熵
-    for dataValue in dataValueClass:                             #遍历特征维度所有可能的取值
-        subDatalSet=trainDataFeature[trainDataFeature==dataValue]#把特征维度中等于dataValue的数据全部提取出来
-        subLabelSet = label[trainDataFeature == dataValue]       #把上述子数据集对应的标签数据集提取出来
-        HDA +=(len(subDatalSet)/len(trainDataFeature))*calculation_H_D(subLabelSet)
+    dataValueClass = np.unique(trainDataFeature)                           #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
+    HDA=0                                                                  #初始化当前特征维度的经验条件熵
+    for dataValue in dataValueClass:                                       #遍历特征维度所有可能的取值
+        subDatalSet=trainDataFeature[np.where(trainDataFeature==dataValue)]#把特征维度中等于dataValue的数据全部提取出来
+        subLabelSet = label[np.where(trainDataFeature == dataValue)]       #把上述子数据集对应的标签数据集提取出来
+        prob=len(subDatalSet)/len(trainDataFeature)                        #该子集所占比例
+        HDA +=prob*calculation_H_D(subLabelSet)
     return HDA
 
 #函数功能：得到最佳的特征维度
