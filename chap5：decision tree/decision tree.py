@@ -75,11 +75,8 @@ def calcBestFeature(trainData, trainLabel):
 # featureIndex: 要去除的特征索引
 # a:data[A]== a时，说明该行样本时要保留的
 def getSubDataArr(trainData, trainLabel,featureIndex, a):
-    subDataSet=trainData[:,featureIndex] #把训练数据集对应的特征维度数据单独提取出来
-    selectIndex=list(subDataSet==a)      #获取子数量数据集满足data[A]== a的训练数据样本的下标
-    print("selectIndex",selectIndex)
-    newData=trainData[selectIndex]       #提取出data[A]== a对应的数据集和标签集
-    newLabel=trainLabel[selectIndex]
+    newLabel=trainLabel[np.where(trainData[:,featureIndex]==a)]  #提取出data[：,A]== a的训练数据和标签数据
+    newData=trainData[np.where(trainData[:,featureIndex]==a)]
     del newData[:,featureIndex]          #删除featureIndex对应的特征维度
     return newData, newLabel             #返回新的数据集和标签集
 
