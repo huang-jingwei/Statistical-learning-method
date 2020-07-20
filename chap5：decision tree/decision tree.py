@@ -1,6 +1,7 @@
 import  tensorflow as  tf
 import numpy as np
 
+
 #加载训练mnist数据集的数据集和测试数据集
 def MnistData():
     #原始的训练数据集是60000张尺寸为28*28的灰色照片，测试数据集是10000张尺寸为28*28的灰色照片
@@ -10,19 +11,22 @@ def MnistData():
     test_data = test_data.reshape(10000, 784)
 
     #图像色素点数据在0~255之间
-    #data数据集进行归一化，这样数据范围在0~1之间
-    train_data=train_data/255
-    test_data=test_data/255
+    #为了二叉树模型的简便性，对像素值做0~1处理，像素值大于255/2的令其为1，反之为0
+    train_data[train_data >= 255/2] = 1
+    train_data[train_data < 255/2]  = 0
+    test_data[test_data   >= 255/2] = 1
+    test_data[test_data   <  255/2] = 0
     return (train_data, train_label), (test_data, test_label)
 
 #函数功能：找到当前标签集中占数目最大的标签
 def majorLabelClass(label):
-   labelClass=np.unique(label)                #对原始标签数据进行去重
-   labelClassNum=np.zeros(len(labelClass))    #初始化0矩阵，用来记录每个类别标签出现的次数
-   for index in range(len(label)):
-       labelClassNum[label[index]]=labelClassNum[label[index]] +1
-   maxValueIndex=np.argmax(labelClassNum)     #出现次数最多类别的下标
-   maxValue=labelClassNum[maxValueIndex]      #出现次数最多的类别的出现次数
+   labelClass=np.unique(label)                 #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
+   labelClassNum=np.zeros(len(labelClass))     #初始化0矩阵，用来记录每个类别标签出现的次数
+   for labelVal in labelClass:                 #遍历label所有可能的取值
+       labelSubSet=label[label==labelVal]      #提取出标签数据集中label==labelVal的数据，构成子数据集
+       labelClassNum[labelVal]=len(labelSubSet)
+   maxValueIndex=np.argmax(labelClassNum)      #出现次数最多类别的下标
+   maxValue=labelClassNum[maxValueIndex]       #出现次数最多的类别的出现次数
    return maxValueIndex,maxValue
 
 
@@ -30,15 +34,15 @@ def majorLabelClass(label):
 #参考公式：李航《统计学习方法》第二版 公式5.7
 #参数说明：label：训练数据集的标签数据集
 def calculation_H_D(label):
-    labelClass = np.unique(label)              #对原始标签数据进行去重
+    labelClass = np.unique(label)              #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
     HD=0                                       #初始化数据集的经验熵
-    for labelValue in labelClass:              #遍历所有类别的数据集
-        subLabelSet=label[label==labelValue]   #把标签数据集中等于labelValue的标签全部提取出来
+    for labelValue in labelClass:              #遍历label所有可能的取值
+        subLabelSet=label[label==labelValue]  #提取出标签数据集中label==labelValue的数据，构成子数据集
         HD +=(-1)*(len(subLabelSet)/len(label))*np.log(len(subLabelSet)/len(label))
     return HD
 
 #函数功能：计算经验条件熵
-#参考公式：李航《统计学习方法》第二版 公式5.7
+#参考公式：李航《统计学习方法》第二版 公式5.8
 #参数说明：trainDataFeature:训练数据集被提取出的的一列特征数据，label：训练数据集的标签数据集
 def calculation_H_D_A(trainDataFeature,label):
     dataValueClass = np.unique(trainDataFeature)                 #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
@@ -46,8 +50,92 @@ def calculation_H_D_A(trainDataFeature,label):
     for dataValue in dataValueClass:                             #遍历特征维度所有可能的取值
         subDatalSet=trainDataFeature[trainDataFeature==dataValue]#把特征维度中等于dataValue的数据全部提取出来
         subLabelSet = label[trainDataFeature == dataValue]       #把上述子数据集对应的标签数据集提取出来
-        HDA +=(len(subDatalSet)/len(label))*calculation_H_D(subLabelSet)
+        HDA +=(len(subDatalSet)/len(trainDataFeature))*calculation_H_D(subLabelSet)
     return HDA
+
+#函数功能：得到最佳的特征维度
+#基本思路：最佳的特征划分维度就是条件经验熵最大的特征维度
+#参考公式：李航《统计学习方法》第二版 公式5.9
+def calcBestFeature(trainData, trainLabel):
+    featureNum=trainData.shape[1]               #特征维度的数量
+    informationGain=np.zeros(featureNum)        #初始化0矩阵，记录每一个维度的信息增益
+    dataHD=calculation_H_D(trainLabel)          #数据集的经验熵
+    for featureIndex in range(featureNum):
+        informationGain[featureIndex]=dataHD-calculation_H_D_A(trainData[:,featureIndex],trainLabel)
+    maxValueIndex = np.argmax(informationGain)  #条件经验熵最大的特征维度的下标
+    maxValue = informationGain[maxValueIndex]   #获取最大的条件经验熵
+    return  maxValueIndex,maxValue
+
+
+#函数功能：更新数据集和标签集，删除掉数据集中特征索引为featureIndex的特征维度数据
+#参数说明：
+# trainData:要更新的原始数据集
+# trainLabel: 要更新的原始标签集
+# featureIndex: 要去除的特征索引
+# a:data[A]== a时，说明该行样本时要保留的
+def getSubDataArr(trainData, trainLabel,featureIndex, a):
+    subDataSet=trainData[:,featureIndex] #把训练数据集对应的特征维度数据单独提取出来
+    selectIndex=list(subDataSet==a)      #获取子数量数据集满足data[A]== a的训练数据样本的下标
+    print("selectIndex",selectIndex)
+    newData=trainData[selectIndex]       #提取出data[A]== a对应的数据集和标签集
+    newLabel=trainLabel[selectIndex]
+    del newData[:,featureIndex]          #删除featureIndex对应的特征维度
+    return newData, newLabel             #返回新的数据集和标签集
+
+
+
+#函数功能：训练决策树模型
+#基本思路：采用ID3算法,参考李航《统计学习方法》第二版 算法5.2
+#参数说明：dataSet=(train_data, train_label)，为元组结构
+#Epsilon:信息增益的阈值
+def createTree(trainData, trainLabel,epsilon=0.1):
+
+    #数据集为空集时，特征维度已经无法再进行划分，就返回占大多数的类别
+    if trainData.shape[1]==0:
+        return majorLabelClass(trainLabel)
+
+    labelClass=np.unique(trainLabel)               #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
+    labelClassNum=np.zeros(len(labelClass))        #初始化0矩阵，用来记录每个label出现的次数
+
+    if len(labelClass) == 1:                       #数据集中只有一个类别时，此时不需要再分化
+        return  labelClass[0]                      #返回标记作为该节点的值，返回后这就是一个叶子节点
+
+
+    for labelVal in labelClass:                    #遍历标签数据集所有可能的取值计算每个类别出现的次数
+        labelSet=trainLabel[trainLabel==labelVal]  #统计每个类别出现的次数
+        labelClassNum[labelVal]=len(labelSet)
+
+    #计算出当前信息最大的信息增益对应的特征维度
+    #参数说明：Ag：特征维度的下标索引，EpsilonGet：对应的信息增益
+    Ag, EpsilonGet = calcBestFeature(trainData, trainLabel)
+
+    # 如果Ag的信息增益比小于阈值Epsilon，则置T为单节点树，并将D中实例数最大的类Ck
+    # 作为该节点的类，返回T
+    if EpsilonGet<epsilon:
+        return  majorLabelClass(trainLabel)
+
+    #否则，对Ag的每一可能值ai，依Ag=ai将D分割为若干非空子集Di，将Di中实例数最大的
+    #类作为标记，构建子节点，由节点及其子节点构成树T，返回T
+    #在数据预处理对数据做过二值化处理，Ag的可能取值ai要么为0，要么为1
+    treeDict = {Ag:{}}
+
+    # 函数说明：getSubDataArr(trainDataList, trainLabelList, Ag, 0)
+    # 在当前数据集中删除掉当前的feature，返回新的数据集和标签集
+    treeDict[Ag][0] = createTree(getSubDataArr(trainData, trainLabel, Ag, 0))
+    treeDict[Ag][1] = createTree(getSubDataArr(trainData, trainLabel, Ag, 1))
+
+    return treeDict
+
+
+
+#函数功能：基于所得到的决策树模型，对样本的标签进行预测
+#参数说明：testSample：测试样本，tree：决策树模型
+def predict(testSample,tree):
+    while True:
+        pass
+    pass
+
+
 
 
 
@@ -66,27 +154,12 @@ def one_hot(label):
         label_one_hot[i,label[i]]=1
     return label_one_hot
 
-
-#sigmoid函数
-def sigmoid(z):
-    return 1/(1+np.exp(-z))
-
-#logistics模型测试
-def modelTest(test_data, test_label,w):
-    acc = 0  # 记录测试集中分类准确点的数量
-    for i in range(len(test_label)):
-        sample = test_data[i]      #提取出当前样本点的特征向量
-        label = test_label[i]      #提取出当前样本点的标签向量
-        linear=np.dot(sample,w.T)  #样本数据和模型参数进行矩阵相乘，进行线性变换
-        prob=sigmoid(linear)       #对线性变化数据进行sigmoid处理
-        predict=np.argmax(prob)    #概率值最大的类别即为预测的类别
-        if predict==label:         #若模型预测的类别与样本的真实类别一致，计数器加一
-            acc  +=1
-    return acc / len(test_label) * 100
-
-
 if __name__=="__main__":
     # 加载mnist数据集中label=0和label=+1的数据，并且将label=0改成label=-1
     (train_data, train_label), (test_data, test_label)=MnistData()
-    #训练模型
-    w=logistics(train_data,train_label,test_data, test_label,epoch=5000,learnRate=0.5)
+    #训练决策树模型
+    dataSet=(train_data, train_label)
+    tree=createTree(train_data, train_label)
+    print(tree)
+
+
