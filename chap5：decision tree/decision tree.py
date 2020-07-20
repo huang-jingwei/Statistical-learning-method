@@ -59,7 +59,7 @@ def calculation_H_D_A(trainDataFeature,label):
 #参考公式：李航《统计学习方法》第二版 公式5.9
 def calcBestFeature(trainData, trainLabel):
     featureNum=trainData.shape[1]               #特征维度的数量
-    informationGain=np.zeros(featureNum)        #初始化0矩阵，记录每一个维度的信息增益
+    informationGain=np.zeros(featureNum)        #初始化0矩阵，记录每一个特征维度的信息增益
     dataHD=calculation_H_D(trainLabel)          #数据集的经验熵
     for featureIndex in range(featureNum):
         informationGain[featureIndex]=dataHD-calculation_H_D_A(trainData[:,featureIndex],trainLabel)
