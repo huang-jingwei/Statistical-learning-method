@@ -1,7 +1,6 @@
 import  tensorflow as  tf
 import numpy as np
 
-
 #加载训练mnist数据集的数据集和测试数据集
 def MnistData():
     #原始的训练数据集是60000张尺寸为28*28的灰色照片，测试数据集是10000张尺寸为28*28的灰色照片
@@ -26,8 +25,7 @@ def majorLabelClass(label):
        labelSubSet=label[label==labelVal]      #提取出标签数据集中label==labelVal的数据，构成子数据集
        labelClassNum[labelVal]=len(labelSubSet)
    maxValueIndex=np.argmax(labelClassNum)      #出现次数最多类别的下标
-   maxValue=labelClassNum[maxValueIndex]       #出现次数最多的类别的出现次数
-   return maxValueIndex,maxValue
+   return maxValueIndex
 
 
 #函数功能：计算数据集的经验熵
