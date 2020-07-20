@@ -132,8 +132,8 @@ def createTree(dataSet,labelClassNum=10,epsilon=0.05):
 def labelPredict(testSample,tree):
     while True:
         # 获取树模型最顶层的key、value
-        #在这个程序中，key代表的是当前节点，value对应的是下一节点
-        (key, value) = tree.items()
+        #在这个程序中，key代表的是当前节点，value对应的是下一节点或者标签类别
+        key, value = tree.items()
 
         if type(tree[key]).__name__ == 'dict':#如果当前的value是字典，说明还需要遍历下去
             dataVal =testSample[key]          #提取出测试样本在该特征维度的数值，取值为0或1
@@ -154,30 +154,20 @@ def modelTest(test_data, test_label,tree):
     # 返回准确率
     print("模型预测的错误率：",errorCount/len(test_label))
 
-
-
-#one-hot处理
-#one-hot处理的核心想法由于是多分类，我们的类别有10个类，所以需要训练10个分类器，每个分类器都是一个二分类器
-# 例如：对于数字0的分类器来说，我们将标签为0的数据的标签重新改成正类1，
-# 将非0标签对应的数据的标签改为负类0，即变为一个二分类问题，
-# 其他分类器一样，将标签是对应分类的类别的标签改为1， 其他置为0
-def one_hot(label):
-    dataNum = len(label)  # 获取原始标签数据集的样本个数
-    # 对标签数据集去掉重复元素，再计算此时元素个数，此时classNum=10
-    classNum=len(np.unique(label)) #label数据集中类别的总数
-    label_one_hot=np.zeros(shape=(dataNum,classNum))  #生成零矩阵
-    for i in range(dataNum):        #按照onehot处理规则进行赋值
-        label_one_hot[i,label[i]]=1
-    return label_one_hot
-
 if __name__=="__main__":
     # 加载mnist数据集中label=0和label=+1的数据，并且将label=0改成label=-1
+    print("开始加载数据")
     (train_data, train_label), (test_data, test_label)=MnistData()
+    print("数据加载结束")
 
     #训练决策树模型
-    dataSet=(train_data, train_label)
+    print("开始训练模型")
+    dataSet=(train_data, train_label)       #将训练数据集合标签和标签数据集组合构成元组类型
     tree=createTree((dataSet))
     print(tree)
+    print("结束训练模型")
 
     #模型预测
-    # modelTest(test_data, test_label, tree)
+    print("开始测试模型")
+    modelTest(test_data, test_label, tree)
+    print("结束测试模型")
