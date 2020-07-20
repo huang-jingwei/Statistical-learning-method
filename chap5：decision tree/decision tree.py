@@ -19,13 +19,14 @@ def MnistData():
 
 #函数功能：找到当前标签集中占数目最大的标签
 def majorLabelClass(label):
-   labelClass=np.unique(label)                 #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
-   labelClassNum=np.zeros(len(labelClass))     #初始化0矩阵，用来记录每个类别标签出现的次数
-   for labelVal in labelClass:                 #遍历label所有可能的取值
-       labelSubSet=label[label==labelVal]      #提取出标签数据集中label==labelVal的数据，构成子数据集
+   labelClass=np.unique(label)                      #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
+   labelClassNum=np.zeros(len(labelClass))          #初始化0矩阵，用来记录每个类别标签出现的次数
+   for labelVal in labelClass:                      #遍历label所有可能的取值
+       labelSubSet=label[np.where(label==labelVal)] #提取出标签数据集中label==labelVal的数据，构成子数据集
        labelClassNum[labelVal]=len(labelSubSet)
-   maxValueIndex=np.argmax(labelClassNum)      #出现次数最多类别的下标
-   return maxValueIndex
+   maxValueIndex=np.argmax(labelClassNum)           #出现次数最多类别的下标,，对应着标签的取值
+   return maxValueIndex                             #返回出现次数最多的标签
+
 
 
 #函数功能：计算数据集的经验熵
@@ -174,6 +175,7 @@ if __name__=="__main__":
     #训练决策树模型
     dataSet=(train_data, train_label)
     tree=createTree(train_data, train_label)
+    print(tree)
 
     #模型预测
-    modelTest(test_data, test_label, tree)
+    # modelTest(test_data, test_label, tree)
