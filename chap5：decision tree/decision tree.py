@@ -19,17 +19,15 @@ def MnistData():
     return (train_data, train_label), (test_data, test_label)
 
 #函数功能：找到当前标签集中占数目最大的标签
-#参数说明： labelClassNum：原始数据集中标签有多少个类别，原始的mnist数据集有10个类别
-def majorLabelClass(label,labelClassNum=10):
-   labelClass=np.unique(label)                      #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
-   labelClassNum=np.zeros(labelClassNum)            #初始化0矩阵，用来记录每个类别标签出现的次数
-   for labelVal in labelClass:                      #遍历label所有可能的取值
-       labelSubSet=label[np.where(label==labelVal)] #提取出标签数据集中label==labelVal的数据，构成子数据集
-       labelClassNum[labelVal]=len(labelSubSet)
-   maxValueIndex=np.argmax(labelClassNum)           #出现次数最多类别的下标,，对应着标签的取值
-   return maxValueIndex                             #返回出现次数最多的标签
-
-
+def majorLabelClass(label):
+   labelClass=np.unique(label)                               #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
+   labelClassNum=np.zeros(len(labelClass))                   #初始化0矩阵，用来记录每个类别标签出现的次数
+   for index in range(len(labelClass)):                      #遍历label所有可能的取值,即val=labelClass[index]
+       val=labelClass[index]
+       labelSubSet=label[np.where(label==val)]               #提取出标签数据集中label==val的数据，构成子数据集
+       labelClassNum[index]=len(labelSubSet)
+   maxValueIndex=np.argmax(labelClassNum)                    #出现次数最多类别的下标,，对应着标签的取值
+   return labelClass[maxValueIndex]                          #返回出现次数最多的label类别
 
 #函数功能：计算数据集的经验熵
 #参考公式：李航《统计学习方法》第二版 公式5.7
@@ -40,7 +38,7 @@ def calculation_H_D(label):
     for labelValue in labelClass:                      #遍历label所有可能的取值
         subLabelSet=label[np.where(label==labelValue)] #提取出标签数据集中label==labelValue的数据，构成子数据集
         prob=len(subLabelSet)/len(label)               #该子集所占比例
-        HD +=(-1)*prob*np.log(prob)
+        HD +=(-1)*prob*np.log2(prob)
     return HD
 
 #函数功能：计算经验条件熵
@@ -75,20 +73,18 @@ def calcBestFeature(trainData, trainLabel):
 # trainData:要更新的原始数据集
 # trainLabel: 要更新的原始标签集
 # featureIndex: 要去除的特征索引
-# a:data[A]== a时，说明该行样本时要保留的
+# a:data[A]== a时，说明该行样本时要保留的样本数据
 def getSubDataArr(trainData, trainLabel,featureIndex, a):
     newLabel=trainLabel[np.where(trainData[:,featureIndex]==a)]  #提取出data[：,A]== a的训练数据和标签数据
     newData=trainData[np.where(trainData[:,featureIndex]==a)]
     np.delete(arr=newData,obj=featureIndex,axis=1)               #删除featureIndex对应的特征维度
     return newData, newLabel                                     #返回更新后的数据集和标签集
 
-
-
 #函数功能：训练决策树模型
 #基本思路：采用ID3算法,参考李航《统计学习方法》第二版 算法5.2
 #参数说明：dataSet=(train_data, train_label)，为元组结构
-#Epsilon:信息增益的阈值,labelClassNum：原始数据集中标签有多少个类别，原始的mnist数据集有10个类别
-def createTree(dataSet,labelClassNum=10,epsilon=0.05):
+#Epsilon:信息增益的阈值
+def createTree(dataSet,epsilon=0.05):
     trainData=dataSet[0]
     trainLabel=dataSet[1]
 
@@ -97,15 +93,16 @@ def createTree(dataSet,labelClassNum=10,epsilon=0.05):
         return majorLabelClass(trainLabel)
 
     labelClass=np.unique(trainLabel)               #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
-    labelClassNum=np.zeros(labelClassNum)          #初始化0矩阵，用来记录每个label出现的次数
+    labelClassNum=np.zeros(len(labelClass))        #初始化0矩阵，用来记录每个label出现的次数
 
     if len(labelClass) == 1:                       #数据集中只有一个类别时，此时不需要再分化
-        return  labelClass[0]                      #返回标记作为该节点的值，返回后这就是一个叶子节点
+        return  labelClass[0].astype(np.int8)      #返回标记作为该节点的值，返回后这就是一个叶子节点
 
 
-    for labelVal in labelClass:                    #遍历标签数据集所有可能的取值计算每个类别出现的次数
-        labelSet=trainLabel[trainLabel==labelVal]  #统计每个类别出现的次数
-        labelClassNum[labelVal]=len(labelSet)
+    for index in range(len(labelClass)):            #遍历标签数据集所有可能的取值计算每个类别出现的次数
+        val=labelClass[index]
+        labelSet=trainLabel[trainLabel==val]        #统计每个类别出现的次数
+        labelClassNum[index]=len(labelSet)
 
     #计算出当前信息最大的信息增益对应的特征维度
     #参数说明：Ag：特征维度的下标索引，EpsilonGet：对应的信息增益
@@ -125,22 +122,21 @@ def createTree(dataSet,labelClassNum=10,epsilon=0.05):
     # 在当前数据集中删除掉当前的feature，返回新的数据集和标签集
     treeDict[Ag][0] = createTree(getSubDataArr(trainData, trainLabel, Ag, 0))
     treeDict[Ag][1] = createTree(getSubDataArr(trainData, trainLabel, Ag, 1))
-
     return treeDict
 
 #函数功能：基于所得到的决策树模型，对样本的标签进行预测
 #参数说明：testSample：测试样本，tree：决策树模型
 def labelPredict(testSample,treeModel):
-    tree=copy.copy(treeModel)
+    tree=copy.copy(treeModel)      #复制树模型，防止下面树节点的移动会覆盖原模型
     while True:
         # 获取树模型最顶层的key、value
         #在这个程序中，key代表的是当前节点，value对应的是下一节点或者标签类别
-        (key, value), = tree.items()
+        (key, value), = tree.items()                 #不加逗号会运行错误，不知道啥原因
 
         if type(tree[key]).__name__ == 'dict':       #如果当前的value是字典，说明还需要遍历下去
             dataVal =testSample[key]                 #提取出测试样本在该特征维度的数值，取值为0或1
             np.delete(arr=testSample,obj=key)        #去除掉测试样本在该特征维度的数值
-            tree=value[dataVal]                      #树节点向下移动
+            tree=tree[key][dataVal]                  #树节点向下移动
             if type(tree).__name__ == 'int':         #树节点移动到了叶子节点，返回该节点值，也就是分类值
                 return tree
         else:                                        #如果当前value不是字典，那就返回分类值
@@ -148,7 +144,7 @@ def labelPredict(testSample,treeModel):
 
 #函数说明：决策树模型测试函数
 def modelTest(test_data, test_label,tree):
-    errorCount = 0                                     #计数器，记录模型预测错误的次数
+    errorCount = 0                                   #计数器，记录模型预测错误的次数
     for index in range(len(test_label)):
         predict=labelPredict(test_data[index],tree)  #树模型对该样本数据的标签预测值
         if predict !=test_label[index]:              #预测得到的标签与真实标签不一致时，计数器加一
@@ -168,9 +164,6 @@ if __name__=="__main__":
     tree=createTree((dataSet))
     print(tree)
     print("结束训练模型")
-
-    for item in tree:
-        item.tolist()
 
     #模型预测
     print("开始测试模型")
