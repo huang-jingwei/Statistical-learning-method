@@ -78,7 +78,7 @@ def getSubDataArr(trainData, trainLabel,featureIndex, a):
     newLabel=trainLabel[np.where(trainData[:,featureIndex]==a)]  #提取出data[：,A]== a的训练数据和标签数据
     newData=trainData[np.where(trainData[:,featureIndex]==a)]
     np.delete(arr=newData,obj=featureIndex,axis=1)               #删除featureIndex对应的特征维度
-    return newData, newLabel                                     #返回更新后的数据集和标签集
+    return (newData, newLabel)                                   #返回更新后的数据集和标签集
 
 #函数功能：训练决策树模型
 #基本思路：采用ID3算法,参考李航《统计学习方法》第二版 算法5.2
@@ -165,7 +165,6 @@ if __name__=="__main__":
     print(tree)
     print("结束训练模型")
 
-    #模型预测
     print("开始测试模型")
     modelTest(test_data, test_label, tree)
     print("结束测试模型")
