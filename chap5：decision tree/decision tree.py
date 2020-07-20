@@ -15,41 +15,42 @@ def MnistData():
     test_data=test_data/255
     return (train_data, train_label), (test_data, test_label)
 
-#logistics模型训练
-#采用随机梯度下降方法，训练logistics模型模型
-#epoch：迭代次数上限,learnRate:学习率
-def logistics(train_data,train_label,test_data, test_label,epoch=3000,learnRate=0.005):
-   dataNum = len(train_label)           # 获取原始标签数据集的样本个数
-   # np.unique(train_label)对标签数据集去重处理，返回处理后的数据
-   classNum=len(np.unique(train_label)) #label数据集中类别的总数，此时classNum=10
+#函数功能：找到当前标签集中占数目最大的标签
+def majorLabelClass(label):
+   labelClass=np.unique(label)                #对原始标签数据进行去重
+   labelClassNum=np.zeros(len(labelClass))    #初始化0矩阵，用来记录每个类别标签出现的次数
+   for index in range(len(label)):
+       labelClassNum[label[index]]=labelClassNum[label[index]] +1
+   maxValueIndex=np.argmax(labelClassNum)     #出现次数最多类别的下标
+   maxValue=labelClassNum[maxValueIndex]      #出现次数最多的类别的出现次数
+   return maxValueIndex,maxValue
 
-   #对权值向量和输入向量进行扩充
-   #在原始数据集合权值向量最后一列单位列向量
-   train_data_one=np.ones(shape=(len(train_label),1))
-   test_data_one=np.ones(shape=(len(test_label),1))
-   train_data=np.c_[train_data,train_data_one]
-   test_data=np.c_[test_data,test_data_one]
 
-   #对标签数据集进行onehot处理
-   train_label=one_hot(train_label)
+#函数功能：计算数据集的经验熵
+#参考公式：李航《统计学习方法》第二版 公式5.7
+#参数说明：label：训练数据集的标签数据集
+def calculation_H_D(label):
+    labelClass = np.unique(label)              #对原始标签数据进行去重
+    HD=0                                       #初始化数据集的经验熵
+    for labelValue in labelClass:              #遍历所有类别的数据集
+        subLabelSet=label[label==labelValue]   #把标签数据集中等于labelValue的标签全部提取出来
+        HD +=(-1)*(len(subLabelSet)/len(label))*np.log(len(subLabelSet)/len(label))
+    return HD
 
-   # 初始化多分类模型参数
-   #十组类别的模型参数
-   w=np.random.rand(classNum,train_data.shape[1])
+#函数功能：计算经验条件熵
+#参考公式：李航《统计学习方法》第二版 公式5.7
+#参数说明：trainDataFeature:训练数据集被提取出的的一列特征数据，label：训练数据集的标签数据集
+def calculation_H_D_A(trainDataFeature,label):
+    dataValueClass = np.unique(trainDataFeature)                 #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
+    HDA=0                                                        #初始化当前特征维度的经验条件熵
+    for dataValue in dataValueClass:                             #遍历特征维度所有可能的取值
+        subDatalSet=trainDataFeature[trainDataFeature==dataValue]#把特征维度中等于dataValue的数据全部提取出来
+        subLabelSet = label[trainDataFeature == dataValue]       #把上述子数据集对应的标签数据集提取出来
+        HDA +=(len(subDatalSet)/len(label))*calculation_H_D(subLabelSet)
+    return HDA
 
-   for i in range(epoch):  # 开始迭代训练，迭代次数上限是epoch
-       z = np.dot(train_data, w.T)        # z:(60000,10) 即60000*10维的矩阵
-       h = 1 / (1 + np.exp(-z))           # sigmoid非线性处理
-       error = h - train_label            # 误差
-       w_grad = np.dot(error.T, train_data) / dataNum #最大似然函数对参数w,b的偏导数
 
-       # 参数w,b更新
-       w= w - learnRate * w_grad
 
-       if i %100==0 :   #每迭代训练一百次，就打印模型的分类准确率
-           acc=modelTest(test_data, test_label,w)
-           print(' %d epoch,model accuracy is %f '%(i,acc))
-   return w
 
 #one-hot处理
 #one-hot处理的核心想法由于是多分类，我们的类别有10个类，所以需要训练10个分类器，每个分类器都是一个二分类器
