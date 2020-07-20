@@ -88,7 +88,7 @@ def getSubDataArr(trainData, trainLabel,featureIndex, a):
 #基本思路：采用ID3算法,参考李航《统计学习方法》第二版 算法5.2
 #参数说明：dataSet=(train_data, train_label)，为元组结构
 #Epsilon:信息增益的阈值
-def createTree(trainData, trainLabel,epsilon=0.1):
+def createTree(trainData, trainLabel,epsilon=0.05):
 
     #数据集为空集时，特征维度已经无法再进行划分，就返回占大多数的类别
     if trainData.shape[1]==0:
@@ -126,17 +126,32 @@ def createTree(trainData, trainLabel,epsilon=0.1):
 
     return treeDict
 
-
-
 #函数功能：基于所得到的决策树模型，对样本的标签进行预测
 #参数说明：testSample：测试样本，tree：决策树模型
-def predict(testSample,tree):
+def labelPredict(testSample,tree):
     while True:
-        pass
-    pass
+        # 获取树模型最顶层的key、value
+        #在这个程序中，key代表的是当前节点，value对应的是下一节点
+        (key, value) = tree.items()
 
+        if type(tree[key]).__name__ == 'dict':#如果当前的value是字典，说明还需要遍历下去
+            dataVal =testSample[key]          #提取出测试样本在该特征维度的数值，取值为0或1
+            del testSample[key]               #去除掉测试样本在该特征维度的数值
+            tree=value[dataVal]               #树节点向下移动
+            if type(tree).__name__ == 'int':  #树节点移动到了叶子节点，返回该节点值，也就是分类值
+                return tree
+        else:                                #如果当前value不是字典，那就返回分类值
+            return tree[key]
 
-
+#函数说明：决策树模型测试函数
+def modelTest(test_data, test_label,tree):
+    errorCount = 0                                     #计数器，记录模型预测错误的次数
+    for index in range(len(test_label)):
+        predict=labelPredict(test_data[index],tree)  #树模型对该样本数据的标签预测值
+        if predict !=test_label[index]:              #预测得到的标签与真实标签不一致时，计数器加一
+            errorCount=errorCount+1
+    # 返回准确率
+    print("模型预测的错误率：",errorCount/len(test_label))
 
 
 
@@ -157,9 +172,10 @@ def one_hot(label):
 if __name__=="__main__":
     # 加载mnist数据集中label=0和label=+1的数据，并且将label=0改成label=-1
     (train_data, train_label), (test_data, test_label)=MnistData()
+
     #训练决策树模型
     dataSet=(train_data, train_label)
     tree=createTree(train_data, train_label)
-    print(tree)
 
-
+    #模型预测
+    modelTest(test_data, test_label, tree)
