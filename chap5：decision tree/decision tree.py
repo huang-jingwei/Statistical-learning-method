@@ -1,5 +1,6 @@
 import  tensorflow as  tf
 import numpy as np
+import copy
 
 #加载训练mnist数据集的数据集和测试数据集
 def MnistData():
@@ -129,19 +130,20 @@ def createTree(dataSet,labelClassNum=10,epsilon=0.05):
 
 #函数功能：基于所得到的决策树模型，对样本的标签进行预测
 #参数说明：testSample：测试样本，tree：决策树模型
-def labelPredict(testSample,tree):
+def labelPredict(testSample,treeModel):
+    tree=copy.copy(treeModel)
     while True:
         # 获取树模型最顶层的key、value
         #在这个程序中，key代表的是当前节点，value对应的是下一节点或者标签类别
-        key, value = tree.items()
+        (key, value), = tree.items()
 
-        if type(tree[key]).__name__ == 'dict':#如果当前的value是字典，说明还需要遍历下去
-            dataVal =testSample[key]          #提取出测试样本在该特征维度的数值，取值为0或1
-            del testSample[key]               #去除掉测试样本在该特征维度的数值
-            tree=value[dataVal]               #树节点向下移动
-            if type(tree).__name__ == 'int':  #树节点移动到了叶子节点，返回该节点值，也就是分类值
+        if type(tree[key]).__name__ == 'dict':       #如果当前的value是字典，说明还需要遍历下去
+            dataVal =testSample[key]                 #提取出测试样本在该特征维度的数值，取值为0或1
+            np.delete(arr=testSample,obj=key)        #去除掉测试样本在该特征维度的数值
+            tree=value[dataVal]                      #树节点向下移动
+            if type(tree).__name__ == 'int':         #树节点移动到了叶子节点，返回该节点值，也就是分类值
                 return tree
-        else:                                #如果当前value不是字典，那就返回分类值
+        else:                                        #如果当前value不是字典，那就返回分类值
             return tree[key]
 
 #函数说明：决策树模型测试函数
@@ -166,6 +168,9 @@ if __name__=="__main__":
     tree=createTree((dataSet))
     print(tree)
     print("结束训练模型")
+
+    for item in tree:
+        item.tolist()
 
     #模型预测
     print("开始测试模型")
