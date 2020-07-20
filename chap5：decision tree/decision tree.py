@@ -33,11 +33,12 @@ def majorLabelClass(label):
 #参考公式：李航《统计学习方法》第二版 公式5.7
 #参数说明：label：训练数据集的标签数据集
 def calculation_H_D(label):
-    labelClass = np.unique(label)              #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
-    HD=0                                       #初始化数据集的经验熵
-    for labelValue in labelClass:              #遍历label所有可能的取值
-        subLabelSet=label[label==labelValue]  #提取出标签数据集中label==labelValue的数据，构成子数据集
-        HD +=(-1)*(len(subLabelSet)/len(label))*np.log(len(subLabelSet)/len(label))
+    labelClass = np.unique(label)                      #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
+    HD=0                                               #初始化数据集的经验熵
+    for labelValue in labelClass:                      #遍历label所有可能的取值
+        subLabelSet=label[np.where(label==labelValue)] #提取出标签数据集中label==labelValue的数据，构成子数据集
+        prob=len(subLabelSet)/len(label)
+        HD +=(-1)*prob*np.log(prob)
     return HD
 
 #函数功能：计算经验条件熵
