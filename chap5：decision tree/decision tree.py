@@ -65,7 +65,7 @@ def calcBestFeature(trainData, trainLabel):
         informationGain[featureIndex]=dataHD-calculation_H_D_A(trainData[:,featureIndex],trainLabel)
     maxValueIndex = np.argmax(informationGain)  #条件经验熵最大的特征维度的下标
     maxValue = informationGain[maxValueIndex]   #获取最大的条件经验熵
-    return  maxValueIndex,maxValue
+    return  maxValueIndex,maxValue              #返回信息增益最大的特征向量下标、以及此时的信息增益
 
 
 #函数功能：更新数据集和标签集，删除掉数据集中特征索引为featureIndex的特征维度数据
