@@ -11,16 +11,17 @@ def MnistData():
 
     #图像色素点数据在0~255之间
     #为了二叉树模型的简便性，对像素值做0~1处理，像素值大于255/2的令其为1，反之为0
-    train_data[train_data >= 255/2] = 1
-    train_data[train_data < 255/2]  = 0
-    test_data[test_data   >= 255/2] = 1
-    test_data[test_data   <  255/2] = 0
+    train_data[train_data < 255 / 2] = 0
+    train_data[train_data >= 255/2]  = 1
+    test_data[test_data < 255 / 2]   = 0
+    test_data[test_data   >= 255/2]  = 1
     return (train_data, train_label), (test_data, test_label)
 
 #函数功能：找到当前标签集中占数目最大的标签
-def majorLabelClass(label):
+#参数说明： labelClassNum：原始数据集中标签有多少个类别，原始的mnist数据集有10个类别
+def majorLabelClass(label,labelClassNum=10):
    labelClass=np.unique(label)                      #对原始标签数据进行去重,得到label所有可能的取值，并且数值是升序排序
-   labelClassNum=np.zeros(len(labelClass))          #初始化0矩阵，用来记录每个类别标签出现的次数
+   labelClassNum=np.zeros(labelClassNum)            #初始化0矩阵，用来记录每个类别标签出现的次数
    for labelVal in labelClass:                      #遍历label所有可能的取值
        labelSubSet=label[np.where(label==labelVal)] #提取出标签数据集中label==labelVal的数据，构成子数据集
        labelClassNum[labelVal]=len(labelSubSet)
@@ -77,7 +78,7 @@ def calcBestFeature(trainData, trainLabel):
 def getSubDataArr(trainData, trainLabel,featureIndex, a):
     newLabel=trainLabel[np.where(trainData[:,featureIndex]==a)]  #提取出data[：,A]== a的训练数据和标签数据
     newData=trainData[np.where(trainData[:,featureIndex]==a)]
-    del newData[:,featureIndex]                                  #删除featureIndex对应的特征维度
+    np.delete(arr=newData,obj=featureIndex,axis=1)               #删除featureIndex对应的特征维度
     return newData, newLabel                                     #返回更新后的数据集和标签集
 
 
@@ -85,15 +86,17 @@ def getSubDataArr(trainData, trainLabel,featureIndex, a):
 #函数功能：训练决策树模型
 #基本思路：采用ID3算法,参考李航《统计学习方法》第二版 算法5.2
 #参数说明：dataSet=(train_data, train_label)，为元组结构
-#Epsilon:信息增益的阈值
-def createTree(trainData, trainLabel,epsilon=0.05):
+#Epsilon:信息增益的阈值,labelClassNum：原始数据集中标签有多少个类别，原始的mnist数据集有10个类别
+def createTree(dataSet,labelClassNum=10,epsilon=0.05):
+    trainData=dataSet[0]
+    trainLabel=dataSet[1]
 
     #数据集为空集时，特征维度已经无法再进行划分，就返回占大多数的类别
     if trainData.shape[1]==0:
         return majorLabelClass(trainLabel)
 
     labelClass=np.unique(trainLabel)               #对特征数据进行去重,得到当前特征维度下特征向量所有可能的取值
-    labelClassNum=np.zeros(len(labelClass))        #初始化0矩阵，用来记录每个label出现的次数
+    labelClassNum=np.zeros(labelClassNum)          #初始化0矩阵，用来记录每个label出现的次数
 
     if len(labelClass) == 1:                       #数据集中只有一个类别时，此时不需要再分化
         return  labelClass[0]                      #返回标记作为该节点的值，返回后这就是一个叶子节点
@@ -173,7 +176,7 @@ if __name__=="__main__":
 
     #训练决策树模型
     dataSet=(train_data, train_label)
-    tree=createTree(train_data, train_label)
+    tree=createTree((dataSet))
     print(tree)
 
     #模型预测
