@@ -137,7 +137,7 @@ def labelPredict(testSample,treeModel):
             dataVal =testSample[key]                 #提取出测试样本在该特征维度的数值，取值为0或1
             np.delete(arr=testSample,obj=key)        #去除掉测试样本在该特征维度的数值
             tree=tree[key][dataVal]                  #树节点向下移动
-            if type(tree).__name__ == 'int':         #树节点移动到了叶子节点，返回该节点值，也就是分类值
+            if type(tree).__name__ != 'dict':        #树节点移动到了叶子节点，返回该节点值，也就是分类值
                 return tree
         else:                                        #如果当前value不是字典，那就返回分类值
             return tree[key]
