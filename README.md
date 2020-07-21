@@ -27,6 +27,10 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106627482
 
 ## 第5章：决策树
 
+CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/107234077
+
+知乎文章链接：
+
 ## 第6章：逻辑斯蒂回归
 CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/106647464
 
