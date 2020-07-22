@@ -1,11 +1,19 @@
 # 统计学习方法
 Python语言复现李航《统计学习方法》第二版的算法，也记录了复现过程的一些个人心得。
 
-算法总结（.md文件）在Doc文件夹
+
+
+**注：**
+
+1、若.md文件打开显示乱码，在Typora软件的偏好设置里勾上内联公式和优先图片相对路径。
+
+2、算法总结（.md文件）在Doc文件夹。算法复现代码在对应的章节文件夹中。
 
 知乎专栏链接：https://zhuanlan.zhihu.com/c_1252919075576856576
 
 CSDN专栏链接：https://blog.csdn.net/zhanzi1538/category_10078175.html
+
+
 
 # 正文
 
@@ -65,5 +73,5 @@ CSDN博客链接：https://blog.csdn.net/zhanzi1538/article/details/107139596
 
 
 
-注：若.md文件打开显示乱码，在Typora软件的偏好设置里勾上内联公式和优先图片相对路径。
+
 
