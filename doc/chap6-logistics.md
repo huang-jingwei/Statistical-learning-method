@@ -100,6 +100,7 @@ J(w)&=\frac{-1}{N}L(w)\\
 &=\frac{-1}{N}\sum_{n=1}^{N}\left(y_{i} \ln (\pi(x_{i})+\left(1-y_{i}\right) \ln (1-\pi(x_{i})\right)
 \end{aligned}$$
 那么对数似然函数$L(w)$的极大值求解问题，就转变成对目标函数$J(w)$的极小值求解问题
+
 ## 2.2 梯度下降法
 因为我们需要求解目标函数$J(w)$的极小值，在这里采用梯度下降法（也可以采用牛顿法或者拟牛顿法），对参数$w$进行估计
 上一小节中，我们得到目标函数的表达式为
@@ -207,10 +208,41 @@ $$\theta=\left[\begin{array}{c}
 \vdots \\
 -\theta_{k}^{T}-
 \end{array}\right]$$
+
 损失函数
-$$J(\theta)=-\frac{1}{m}\left[\sum_{i=1}^{m} \sum_{j=1}^{k} 1\left\{y^{(i)}=j\right\} \log \frac{e^{\theta_{j}^{T} x^{(i)}}}{\sum_{l=1}^{k} e^{\theta_{l}^{T} x^{(i)}}}\right]$$
+$$
+\begin{aligned}
+J(\theta)&=-\frac{1}{m}\left[\sum_{i=1}^{m} \sum_{j=1}^{k} 1\left\{y^{(i)}=j\right\} \log \frac{e^{\theta_{j}^{T} x^{(i)}}}{\sum_{l=1}^{k} e^{\theta_{l}^{T} x^{(i)}}}\right]\\
+\end{aligned}
+$$
+**补充知识**
+
+1、在下面的公式中，$\{1\}$是示性函数，其取值规则为：
+$$
+1\{表达式为真\}=1，1\{表达式为假\}=0
+$$
+例如：$1\{2+2=4\}=11\{2+3=4\}=0$
+
+2、上述公式是logistic回归代价函数的推广。logistic回归代价函数可以改为：
+$$
+\begin{aligned}
+J(\theta)&=\frac{-1}{m}\sum_{n=1}^{m}\left(y_{i} \ln (\pi(x_{i})+\left(1-y_{i}\right) \ln (1-\pi(x_{i})\right)\\
+&=-\frac{1}{m}\left[\sum_{i=1}^{m} \sum_{j=0}^{1} 1\left\{y^{(i)}=j\right\} \log \frac{e^{\theta_{j}^{T} x^{(i)}}}{\sum_{l=0}^{1} e^{\theta_{l}^{T} x^{(i)}}}\right]\\
+\end{aligned}
+$$
+
+
+
 求导后，可得
 $$\nabla_{\theta_{j}} J(\theta)=-\frac{1}{m} \sum_{i=1}^{m}\left[x^{(i)}\left(1\left\{y^{(i)}=j\right\}-p\left(y^{(i)}=j | x^{(i)} ; \theta\right)\right)\right]$$
+
+其中$p\left(y^{(i)}=j | x^{(i)} ; \theta\right)$为在softmax模型中将该样本分到$j$类的概率
+
+
+$$
+p\left(y^{(i)}=j | x^{(i)} ; \theta\right)=\frac{e^{\theta_{j}^{T} x^{(i)}}}{\sum_{j=1}^{k}e^{\theta_{j}^{T} x^{(i)}}}
+$$
+
 
 根据梯度下降法，更新参数
 
