@@ -174,12 +174,21 @@ $$A=U \Sigma V^{\mathrm{T}}$$
 下面先给出符号定义：
 
  1. $\boldsymbol{X}=\{X_{1},X_{2},...,X_{m}\}$为未经任何处理的原始随机向量，$\Sigma$为随机变量$\boldsymbol{X}$的协方差矩阵。；
+
  2. 系数矩阵$\alpha=\{\alpha_{1},\alpha_{2},...,\alpha_{k}\}$。其中向量$\alpha_{i}$是原始数据$\boldsymbol{X}$的第$i$个变换方向；
+
  3. 变换后数据$Y=(Y_{1},Y_{2},...,Y_{k})$,其中$Y_{k}$为$\boldsymbol{X}$的第$k$主成分(即$Y_{k}$是$\boldsymbol{X}$所有线性变换中方差排在第$k$)。
  $$Y_{k}=\alpha_{k}^{\mathrm{T}} \boldsymbol{X}=\alpha_{1 k} X_{1}+\alpha_{2 k} X_{2}+\cdots+\alpha_{m k} X_{m}, \quad k=1,2, \cdots, m$$
+ 
  4. 变换后数据对应的方差$\lambda=(\lambda_{1},\lambda_{2},...,\lambda_{k})$,其中$\lambda_{k}$为第$k$个主成分（即$Y_{k}$）的方差。
-$$\operatorname{var}\left(y_{k}\right)=\operatorname{var}\left(\alpha_{k}^{\mathrm{T}} \boldsymbol{X}\right)=\alpha_{k}^{\mathrm{T}} \Sigma \alpha_{k}=\lambda_{k}, \quad k=1,2, \cdots, m$$
-即协方差矩阵$\Sigma$的第$k$个特征值。
+  $$\operatorname{var}\left(y_{k}\right)=\operatorname{var}\left(\alpha_{k}^{\mathrm{T}} \boldsymbol{X}\right)=\alpha_{k}^{\mathrm{T}} \Sigma \alpha_{k}=\lambda_{k}, \quad k=1,2, \cdots, m$$
+  即协方差矩阵$\Sigma$的第$k$个特征值。
+
+  **注意：上面式子用了线性代数的一个定理**
+  $$
+  Var(A \cdot X)=A^{T} \cdot Var(X) \cdot A
+  $$
+  
 
 结合上面过程，PCA方法就是需要找到一组正交变换，使得矩阵$A$经过正交变换后，方差最大。
 故取$\alpha=\{\alpha_{1},\alpha_{2},...,\alpha_{i},...,\alpha_{k}\}$为一组标准正交基。
